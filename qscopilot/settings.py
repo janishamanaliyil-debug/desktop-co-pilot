@@ -81,15 +81,16 @@ WSGI_APPLICATION = 'qscopilot.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+import environ
+env = environ.Env()
 DATABASES = {
     'default' : {
         'ENGINE' : 'django_tenants.postgresql_backend',
-        'NAME' : 'desktop_qs' ,
-        'USER' : 'postgres',
-        'PASSWORD' : 'qs@#NWS321',
-        'HOST' : 'localhost',
-        'PORT' : '5432',
-
+        'NAME' : env('DB_NAME'),
+        'USER' : env('DB_USER'),
+        'PASSWORD' : env('DB_PASSWORD'),
+        'HOST' : env('DB_HOST'),
+        'PORT' : env('DB_PORT'),
 
               }
 }
