@@ -94,7 +94,9 @@ DATABASES = {
 
               }
 }
-
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
