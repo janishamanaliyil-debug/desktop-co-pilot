@@ -30,7 +30,8 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
-INSTALLED_APPS = [
+SHARED_APPS = [
+    'django_tenants',  # mandatory
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,8 +40,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'customer',
     'core',
-    'tasks'
+    
 ]
+
+TENANT_APPS = (
+    # your tenant-specific apps
+    'tasks',
+)
+
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
@@ -83,7 +91,16 @@ WSGI_APPLICATION = 'qscopilot.wsgi.application'
 #     }
 # }
 import environ
-env = environ.Env()
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+environ.Env.read_env(BASE_DIR / ".env")
+
 DATABASES = {
     'default' : {
         'ENGINE' : 'django_tenants.postgresql_backend',
@@ -136,3 +153,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 AUTH_USER_MODEL = 'core.User'
+
+TENANT_MODEL = "core.Client" # app.Model
+
+TENANT_DOMAIN_MODEL = "core.Domain"  # app.Model
